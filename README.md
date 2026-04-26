@@ -18,7 +18,7 @@ Surface session data — context usage, model info, git state, token counts, cac
 
 ## Preview
 
-![Statusline Preview](assets/preview.svg)
+![Statusline Preview](assets/preview_linux.png)
 
 > Colors are rendered live in the terminal using ANSI escape codes. The preview above approximates the actual appearance.
 
@@ -291,4 +291,4 @@ The payload contains everything needed — no network calls, no file reads beyon
 
 ## License
 
-[MIT](LICENSE) © 2026 Paul Millner
+[MIT](LICENSE) — free to use, modify, and distribute.
