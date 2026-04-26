@@ -1,13 +1,10 @@
-#!/usr/bin/env bash
-# Claude Code statusline script.
+#!/bin/bash
+# Claude Code statusline — Linux version.
 # Claude Code pipes a JSON payload via stdin on every refresh (see refreshInterval
 # in settings.json). All session data — model, context, cost, tokens, rate limits,
 # git state — comes from that single payload. Nothing is fetched externally.
 input=$(cat)
 printf '%s\n' "$input" > /tmp/statusline-debug.json   # snapshot for debugging
-
-# Detect OS once — used by _localtime() for platform-specific date conversion
-_OS=$(uname -s 2>/dev/null || echo "Linux")
 
 # Format a raw integer as a compact human-readable string.
 # Examples: 500 -> "500", 1500 -> "1.5k", 45000 -> "45k", 200000 -> "200k"
@@ -55,14 +52,7 @@ fmt_reset() {
 }
 
 # Convert a Unix epoch timestamp to local HH:MM (24-hour).
-# macOS/BSD uses `date -r <epoch>`; Linux/WSL/Git Bash use `date -d @<epoch>`.
-_localtime() {
-  local ts="$1"
-  case "$_OS" in
-    Darwin) date -r "$ts" "+%H:%M" ;;
-    *)      date -d "@$ts" "+%H:%M" ;;
-  esac
-}
+_localtime() { date -d "@$1" "+%H:%M"; }
 
 # Build a 10-block smooth progress bar using Unicode eighth-block characters.
 # fill_color is an ANSI escape string (e.g. "\033[01;31m" for bright red).
@@ -95,11 +85,7 @@ build_bar() {
 
 # Parse all 29 fields from the JSON payload in a single jq invocation.
 # Field indices are referenced by number in the variable assignments below.
-# Uses a while-loop instead of mapfile for bash 3.2 compatibility (macOS default shell).
-_f=()
-while IFS= read -r _jq_line; do
-  _f+=("$_jq_line")
-done < <(printf '%s\n' "$input" | jq -r '
+mapfile -t _f < <(printf '%s\n' "$input" | jq -r '
   (.cwd // ""),                                                                    # [0]  working directory
   (.model.id // ""),                                                               # [1]  raw model id (e.g. claude-sonnet-4-6)
   (.model.display_name // ""),                                                     # [2]  human label (e.g. Sonnet 4.6)
@@ -252,12 +238,12 @@ if { [ "${_api_dur:-0}" -gt 0 ] || [ "${_dur:-0}" -gt 0 ]; } 2>/dev/null; then
   fi
 fi
 
-# Lines added/removed this session
+# Lines added/removed this session (dark green for additions, dark red for removals)
 lines_str=""
 if { [ "${_lines_add:-0}" -gt 0 ] || [ "${_lines_rem:-0}" -gt 0 ]; } 2>/dev/null; then
   lines_str="∆"
-  [ "${_lines_add:-0}" -gt 0 ] && lines_str="${lines_str} +${_lines_add}"
-  [ "${_lines_rem:-0}" -gt 0 ] && lines_str="${lines_str} -${_lines_rem}"
+  [ "${_lines_add:-0}" -gt 0 ] && lines_str="${lines_str} \033[32m+${_lines_add}\033[30m"
+  [ "${_lines_rem:-0}" -gt 0 ] && lines_str="${lines_str} \033[31m-${_lines_rem}\033[30m"
 fi
 
 # Rate limits: color driven by the higher of the two limits.
@@ -272,7 +258,7 @@ if [ -n "$_rl5h" ] || [ -n "$_rl7d" ]; then
   elif [ "$_rl_max" -ge 70 ] 2>/dev/null; then rl_color="\033[43m\033[01;30m"
   else                                          rl_color="\033[01;32m"
   fi
-  now=$(date +%s)   # current Unix epoch for countdown arithmetic
+  now=$(date +%s)
   rl5h_part=""
   if [ -n "$_rl5h" ]; then
     rl5h_part="5h:${_rl5h}%"
@@ -333,8 +319,6 @@ fi
 # Assemble output across three lines.
 # sep  = internal section divider (space │ space) used between sections on the same line
 # tsep = trailing section divider (space │) appended at the end of each line
-# The ${var:+${var}${sep}} pattern appends sep only when var is already non-empty,
-# preventing a leading separator on the first section of each line.
 sep="\033[00m \033[02;37m│\033[00m "
 tsep=" \033[02;37m│\033[00m"
 
