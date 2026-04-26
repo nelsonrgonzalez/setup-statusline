@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="92">
+  <!-- Terminal window background -->
+  <rect width="900" height="92" fill="#1e1e2e" rx="8"/>
+  <!-- Subtle inner glow border -->
+  <rect x="1" y="1" width="898" height="90" fill="none" stroke="#313244" stroke-width="1" rx="7"/>
+
+  <!-- LINE 1 background regions -->
+  <!-- Blue location section background -->
+  <rect x="0" y="0" width="418" height="29" fill="#1d3557" rx="7 0 0 0"/>
+
+  <!-- LINE 3 background regions -->
+  <!-- Magenta tokens section background -->
+  <rect x="10" y="62" width="204" height="22" fill="#3b2456" rx="3"/>
+  <!-- Dark gray cache section background -->
+  <rect x="237" y="62" width="160" height="22" fill="#313244" rx="3"/>
+  <!-- White cost section background -->
+  <rect x="420" y="62" width="294" height="22" fill="#f8f8f2" rx="3"/>
+
+  <!-- LINE 1: location │ git │ model+badges -->
+  <text y="20" font-family="'Courier New',Consolas,'Lucida Console',monospace" font-size="13" xml:space="preserve">
+    <tspan x="10"  fill="#89b4fa" font-weight="bold">❯ ~/.claude/skills</tspan>
+    <tspan        fill="#cdd6f4">&#160;</tspan>
+    <tspan        fill="#b4befe">[modify-statusline-command.sh]</tspan>
+    <tspan        fill="#45475a" font-weight="normal"> │ </tspan>
+    <tspan        fill="#cdd6f4" font-weight="bold">⎇ main</tspan>
+    <tspan        fill="#45475a" font-weight="normal"> │ </tspan>
+    <tspan        fill="#89dceb" font-weight="bold">Sonnet 4.6</tspan>
+    <tspan        fill="#ff79c6"> 💡</tspan>
+    <tspan        fill="#f38ba8"> 𐄛</tspan>
+    <tspan        fill="#45475a" font-weight="normal"> │</tspan>
+  </text>
+
+  <!-- LINE 2: context bar │ rate limits -->
+  <text y="49" font-family="'Courier New',Consolas,'Lucida Console',monospace" font-size="13" xml:space="preserve">
+    <tspan x="10" fill="#f1fa8c">⛁ ██████▊</tspan>
+    <tspan        fill="#45475a">███</tspan>
+    <tspan        fill="#cdd6f4"> 136k╱200k (68%)</tspan>
+    <tspan        fill="#45475a"> │ </tspan>
+    <tspan        fill="#a6e3a1">◷ 5h:28% [↻4h3m @23:00] 7d:33% [↻2d8h]</tspan>
+    <tspan        fill="#45475a"> │</tspan>
+  </text>
+
+  <!-- LINE 3: tokens │ cache+efficiency │ cost/dur/lines -->
+  <text y="78" font-family="'Courier New',Consolas,'Lucida Console',monospace" font-size="13" xml:space="preserve">
+    <tspan x="14" fill="#ff79c6" font-weight="bold">⬡ ↓1 ↑137 Σ↓690 Σ↑56.6k</tspan>
+    <tspan        fill="#45475a"> │ </tspan>
+    <tspan        fill="#cdd6f4">⚡ ⊕1.3k ↻134.6k</tspan>
+    <tspan        fill="#a6e3a1"> ♻99%</tspan>
+    <tspan        fill="#45475a"> │ </tspan>
+    <tspan        fill="#1e1e2e" font-weight="bold">$ 3.42 ⧗ 17m21s╱20h5m ∆ +632 -131</tspan>
+    <tspan        fill="#45475a"> │</tspan>
+  </text>
+</svg>
