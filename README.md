@@ -262,7 +262,7 @@ cat /tmp/statusline-debug.json | bash ~/.claude/statusline-command.sh
 **PowerShell / CMD:** the debug snapshot is written to `$env:TEMP\statusline-debug.json`:
 
 ```powershell
-Get-Content "$env:TEMP\statusline-debug.json" | & pwsh -NoProfile -File "$env:USERPROFILE\.claude\statusline.ps1"
+Get-Content "$env:TEMP\statusline-debug.json" | & pwsh -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.claude\statusline.ps1"
 ```
 
 ---

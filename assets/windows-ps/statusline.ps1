@@ -9,6 +9,10 @@
 
 param()
 
+# UTF-8 must be set before reading stdin so Unicode characters survive the pipe
+[Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
 # Read JSON payload from stdin
 $rawJson = [Console]::In.ReadToEnd()
 $rawJson | Out-File -FilePath "$env:TEMP\statusline-debug.json" -Encoding utf8 -NoNewline
@@ -48,15 +52,15 @@ function fmt_dur([long]$ms) {
     return "${s}s"
 }
 
-# Format seconds as countdown string (e.g. ⭮2h14m)
+# Format seconds as countdown string (e.g. ↻2h14m)
 function fmt_reset([long]$secs) {
     $d = [int]($secs / 86400)
     $h = [int](($secs % 86400) / 3600)
     $m = [int](($secs % 3600) / 60)
-    if ($d -gt 0 -and $h -gt 0) { return "⭮${d}d${h}h" }
-    if ($d -gt 0)                { return "⭮${d}d" }
-    if ($h -gt 0)                { return "⭮${h}h${m}m" }
-    return "⭮${m}m"
+    if ($d -gt 0 -and $h -gt 0) { return "↻${d}d${h}h" }
+    if ($d -gt 0)                { return "↻${d}d" }
+    if ($h -gt 0)                { return "↻${h}h${m}m" }
+    return "↻${m}m"
 }
 
 # Convert Unix epoch to local HH:MM (24-hour). Works on PS 5.1+ (.NET 4.5+).
@@ -208,7 +212,7 @@ if ($null -ne $ctxPct -and $winSize -gt 0) {
 }
 
 # --- Git status ---
-$gitStr = "$esc[2;37m⎇ —$esc[0m"
+$gitStr = "$esc[2;37m⎇  —$esc[0m"
 if ($cwd) {
     $null = & git -C "$cwd" rev-parse --git-dir 2>&1
     if ($LASTEXITCODE -eq 0) {
@@ -217,7 +221,7 @@ if ($cwd) {
         $staged    = @($statusLines | Where-Object { $_ -match '^[MADRCU]' }).Count
         $modified  = @($statusLines | Where-Object { $_ -match '^ [MD]' }).Count
         $untracked = @($statusLines | Where-Object { $_ -match '^\?\?' }).Count
-        $gitStr = "$esc[1;37m⎇ $(if ($branch) { $branch } else { 'HEAD' })$esc[0m"
+        $gitStr = "$esc[1;37m⎇  $(if ($branch) { $branch } else { 'HEAD' })$esc[0m"
         if ($staged    -gt 0) { $gitStr += " $esc[1;32m+$staged$esc[0m" }
         if ($modified  -gt 0) { $gitStr += " $esc[1;33m~$modified$esc[0m" }
         if ($untracked -gt 0) { $gitStr += " $esc[2;37m?$untracked$esc[0m" }
@@ -230,7 +234,7 @@ if ($hasUsage) {
     $f = fmt_num $inTokens;    if ($f) { $inStr  = "↓$f" }
     $f = fmt_num $outTokens;   if ($f) { $outStr = "↑$f" }
     $f = fmt_num $cacheCreate; if ($f) { $ccStr  = "⊕$f" }
-    $f = fmt_num $cacheRead;   if ($f) { $crStr  = "⭮$f" }
+    $f = fmt_num $cacheRead;   if ($f) { $crStr  = "↻$f" }
 }
 
 # --- Cache efficiency ---
@@ -239,7 +243,7 @@ $effStr = ""; $effColor = ""
 $totalCache = $cacheCreate + $cacheRead
 if ($totalCache -gt 0) {
     $eff = [int][Math]::Round($cacheRead * 100.0 / $totalCache)
-    $effStr = "♻ $eff%"
+    $effStr = "♻$eff%"
     if      ($eff -ge 70) { $effColor = "$esc[1;32m" }
     elseif  ($eff -ge 40) { $effColor = "$esc[43m$esc[1;33m" }
     else                  { $effColor = "$esc[41m$esc[1;31m" }
@@ -356,6 +360,4 @@ $output = $line1
 if ($line2) { $output += "`n$line2" }
 if ($line3) { $output += "`n$line3" }
 
-# Write directly to stdout with UTF-8 encoding so ANSI codes pass through correctly
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::Out.Write($output)

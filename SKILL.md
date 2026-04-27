@@ -118,7 +118,7 @@ Read `~/.claude/settings.json`. Add or update the `statusLine` block using the c
 ```json
 "statusLine": {
   "type": "command",
-  "command": "pwsh -NoProfile -NonInteractive -File \"%USERPROFILE%\\.claude\\statusline.ps1\"",
+  "command": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.claude\\statusline.ps1\"",
   "refreshInterval": 10
 }
 ```
@@ -127,7 +127,7 @@ Read `~/.claude/settings.json`. Add or update the `statusLine` block using the c
 ```json
 "statusLine": {
   "type": "command",
-  "command": "powershell -NoProfile -NonInteractive -File \"%USERPROFILE%\\.claude\\statusline.ps1\"",
+  "command": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.claude\\statusline.ps1\"",
   "refreshInterval": 10
 }
 ```
@@ -154,7 +154,7 @@ cat /tmp/statusline-debug.json | bash ~/.claude/statusline-command.sh
 **PowerShell / CMD:** the debug snapshot is written to `$env:TEMP\statusline-debug.json`:
 
 ```powershell
-Get-Content "$env:TEMP\statusline-debug.json" | & pwsh -NoProfile -File "$env:USERPROFILE\.claude\statusline.ps1"
+Get-Content "$env:TEMP\statusline-debug.json" | & pwsh -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.claude\statusline.ps1"
 ```
 
 The output should be 3 lines of ANSI-colored text. If it errors, diagnose and fix before reporting success.

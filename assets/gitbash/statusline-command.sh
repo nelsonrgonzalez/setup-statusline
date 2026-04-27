@@ -87,7 +87,7 @@ build_bar() {
 
 # Parse all 29 fields from the JSON payload in a single jq invocation.
 # Field indices are referenced by number in the variable assignments below.
-# Uses a while-loop instead of mapfile for bash 3.2 compatibility (macOS default shell).
+# Uses a while-loop instead of mapfile for bash 3.2 compatibility (Git Bash ships bash 3.2).
 _f=()
 while IFS= read -r _jq_line; do
   _f+=("$_jq_line")
@@ -141,11 +141,11 @@ elif [ "${cwd#"$HOME/"}" != "$cwd" ]; then
 else
   display_cwd="$cwd"
 fi
-location=$(printf "\033[44m\033[01;34m❯ %s\033[00m" "${display_cwd}")
-[ -n "$_session_name" ] && location="${location}\033[44m\033[01;34m [${_session_name}]\033[00m"
-[ "${_added_dirs:-0}" -gt 0 ] 2>/dev/null && location="${location}\033[44m\033[01;34m +${_added_dirs}\033[00m"
+location=$(printf "\033[44m\033[01;37m❯ %s\033[00m" "${display_cwd}")
+[ -n "$_session_name" ] && location="${location}\033[44m\033[01;37m [${_session_name}]\033[00m"
+[ "${_added_dirs:-0}" -gt 0 ] 2>/dev/null && location="${location}\033[44m\033[01;37m +${_added_dirs}\033[00m"
 if [ -n "$_project_dir" ] && [ "$_project_dir" != "$cwd" ]; then
-  location="${location}\033[44m\033[02;34m ↑${_project_dir##*/}\033[00m"
+  location="${location}\033[44m\033[37m ↑${_project_dir##*/}\033[00m"
 fi
 
 # Model color, display label, and active mode badges
@@ -294,12 +294,12 @@ if [ -n "$cwd" ] && git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     /^\?\?/     { u++ }
     END { printf "%d %d %d\n", s+0, m+0, u+0 }
   ')
-  git_str="\033[01;37m⎇ ${_branch:-HEAD}\033[00m"
+  git_str="\033[01;37m⎇  ${_branch:-HEAD}\033[00m"
   [ "$_gstaged"    -gt 0 ] && git_str="${git_str} \033[01;32m+${_gstaged}\033[00m"
   [ "$_gmodified"  -gt 0 ] && git_str="${git_str} \033[01;33m~${_gmodified}\033[00m"
   [ "$_guntracked" -gt 0 ] && git_str="${git_str} \033[02;37m?${_guntracked}\033[00m"
 else
-  git_str="\033[02;37m⎇ —\033[00m"
+  git_str="\033[02;37m⎇  —\033[00m"
 fi
 
 sep="\033[00m \033[02;37m│\033[00m "
@@ -320,7 +320,7 @@ token_parts=""
 [ -n "$out_str" ]  && token_parts="${token_parts:+${token_parts} }${out_str}"
 [ -n "$tin_str" ]  && token_parts="${token_parts:+${token_parts} }${tin_str}"
 [ -n "$tout_str" ] && token_parts="${token_parts:+${token_parts} }${tout_str}"
-[ -n "$token_parts" ] && line3="${line3:+${line3}${sep}}\033[45m\033[01;35m⬡ ${token_parts}\033[00m"
+[ -n "$token_parts" ] && line3="${line3:+${line3}${sep}}\033[45m\033[30m⬡ ${token_parts}\033[00m"
 cache_parts=""
 [ -n "$cc_str" ] && cache_parts="${cache_parts:+${cache_parts} }${cc_str}"
 [ -n "$cr_str" ] && cache_parts="${cache_parts:+${cache_parts} }${cr_str}"

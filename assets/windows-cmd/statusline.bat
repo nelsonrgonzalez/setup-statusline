@@ -8,7 +8,7 @@
 ::
 :: Prefers PowerShell 7 (pwsh) when available; falls back to Windows PowerShell 5.1.
 where pwsh >nul 2>&1 && (
-    pwsh -NoProfile -NonInteractive -File "%~dp0statusline.ps1"
+    pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0statusline.ps1"
 ) || (
-    powershell -NoProfile -NonInteractive -File "%~dp0statusline.ps1"
+    powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0statusline.ps1"
 )
