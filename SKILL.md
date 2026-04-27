@@ -181,7 +181,7 @@ Each asset is purpose-built for its platform with no runtime branching:
 Three lines of ANSI-colored output rendered in the Claude Code terminal on every turn:
 
 ```
-❯ ~/.claude/skills [modify-statusline-command.sh] │ ⎇ main │ Sonnet 4.6 💡 𐄛 │
+❯ ~/.claude/skills [modify-statusline-command.sh] │ ⎇  main │ Sonnet 4.6 💡 high │
 ⛁ ██████▊███ 136k╱200k (68%) │ ◷ 5h:28% [↻4h3m @23:00] 7d:33% [↻2d8h] │
 ⬡ ↓1 ↑137 Σ↓690 Σ↑56.6k │ ⚡ ⊕1.3k ↻134.6k ♻99% │ $ 3.42 ⧗ 17m21s╱20h5m ∆ +632 -131 │
 ```

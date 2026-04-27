@@ -43,7 +43,7 @@ Surface session data — context usage, model info, git state, token counts, cac
 ### Line 1 — Location · Git · Model
 
 ```
-❯ ~/.claude/skills [modify-statusline-command.sh] │ ⎇ main │ Sonnet 4.6 💡 𐄛 │
+❯ ~/.claude/skills [modify-statusline-command.sh] │ ⎇  main │ Sonnet 4.6 💡 high │
 ```
 
 | Element | Meaning |
@@ -52,15 +52,15 @@ Surface session data — context usage, model info, git state, token counts, cac
 | `[session-name]` | Named session, if set via `/rename` |
 | `+N` | Number of extra workspace directories added |
 | `↑project` | VS Code project root when it differs from `cwd` |
-| `⎇ branch` | Git branch name (or `HEAD` if detached) |
+| `⎇  branch` | Git branch name (or `HEAD` if detached) |
 | `+N` (green) | Staged file count |
 | `~N` (yellow) | Modified unstaged file count |
 | `?N` (dim) | Untracked file count |
-| `⎇ —` (dim) | Not a git repository |
+| `⎇  —` (dim) | Not a git repository |
 | Model name | Color-coded: gold = Opus, green = Haiku, cyan = Sonnet |
 | `💡` | Extended thinking enabled |
 | `⚡` | Fast mode enabled |
-| `𐄙`–`𐄝` | Effort level: low → medium → high → xhigh → max |
+| `low`/`medium`/`high`/`xhigh`/`max` | Effort level (colored text: dim→yellow→red→red→white-on-red) |
 | `N/I/V/VL` | Vim mode: Normal / Insert / Visual / Visual Line |
 
 ### Line 2 — Context Bar · Rate Limits
