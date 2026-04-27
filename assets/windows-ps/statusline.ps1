@@ -243,7 +243,7 @@ $effStr = ""; $effColor = ""
 $totalCache = $cacheCreate + $cacheRead
 if ($totalCache -gt 0) {
     $eff = [int][Math]::Round($cacheRead * 100.0 / $totalCache)
-    $effStr = "♻$eff%"
+    $effStr = "$eff%"
     if      ($eff -ge 70) { $effColor = "$esc[1;32m" }
     elseif  ($eff -ge 40) { $effColor = "$esc[43m$esc[1;33m" }
     else                  { $effColor = "$esc[41m$esc[1;31m" }

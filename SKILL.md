@@ -183,7 +183,7 @@ Three lines of ANSI-colored output rendered in the Claude Code terminal on every
 ```
 ❯ ~/.claude/skills [modify-statusline-command.sh] │ ⎇  main │ Sonnet 4.6 💡 high │
 ⛁ ██████▊███ 136k╱200k (68%) │ ◷ 5h:28% [↻4h3m @23:00] 7d:33% [↻2d8h] │
-⬡ ↓1 ↑137 Σ↓690 Σ↑56.6k │ ⚡ ⊕1.3k ↻134.6k ♻99% │ $ 3.42 ⧗ 17m21s╱20h5m ∆ +632 -131 │
+⬡ ↓1 ↑137 Σ↓690 Σ↑56.6k │ ⚡ ⊕1.3k ↻134.6k 99% │ $ 3.42 ⧗ 17m21s╱20h5m ∆ +632 -131 │
 ```
 
 **Line 1 — Location · Git · Model** (blue / white / cyan)
@@ -197,5 +197,5 @@ Three lines of ANSI-colored output rendered in the Claude Code terminal on every
 
 **Line 3 — Tokens · Cache · Cost** (magenta / dark-gray / white backgrounds)
 - `⬡ ↓N ↑N Σ↓N Σ↑N` — current-turn input/output (↓/↑) and session totals (Σ↓/Σ↑)
-- `⚡ ⊕N ↻N ♻N%` — cache writes (⊕), cache reads (↻), efficiency ratio (♻); efficiency color: green ≥70%, yellow 40–69%, red <40%
+- `⚡ ⊕N ↻N N%` — cache writes (⊕), cache reads (↻), efficiency ratio; efficiency color: green ≥70%, yellow 40–69%, red <40%
 - `$ N.NN ⧗ api╱wall ∆ +N -N` — cumulative cost, API time over wall-clock time, lines added (dark green) / removed (dark red)

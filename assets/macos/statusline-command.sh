@@ -200,7 +200,7 @@ fi
 _total_cache=$(( ${_cc:-0} + ${_cr:-0} ))
 if [ "$_total_cache" -gt 0 ] 2>/dev/null; then
   _eff=$(awk -v cr="${_cr:-0}" -v tot="$_total_cache" 'BEGIN { printf "%.0f", cr / tot * 100 }')
-  eff_str="♻${_eff}%"
+  eff_str="${_eff}%"
   if   [ "$_eff" -ge 70 ]; then eff_color="\033[01;32m"
   elif [ "$_eff" -ge 40 ]; then eff_color="\033[43m\033[01;33m"
   else                          eff_color="\033[41m\033[01;31m"

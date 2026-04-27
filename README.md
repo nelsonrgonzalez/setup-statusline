@@ -93,7 +93,7 @@ Surface session data — context usage, model info, git state, token counts, cac
 ### Line 3 — Tokens · Cache · Cost
 
 ```
-⬡ ↓1 ↑137 Σ↓690 Σ↑56.6k │ ⚡ ⊕1.3k ↻134.6k ♻99% │ $ 3.42 ⧗ 17m21s╱20h5m ∆ +632 -131 │
+⬡ ↓1 ↑137 Σ↓690 Σ↑56.6k │ ⚡ ⊕1.3k ↻134.6k 99% │ $ 3.42 ⧗ 17m21s╱20h5m ∆ +632 -131 │
 ```
 
 | Element | Meaning |
@@ -104,7 +104,7 @@ Surface session data — context usage, model info, git state, token counts, cac
 | `⚡` section | Cache activity (dark gray background) |
 | `⊕N` | Cache write tokens (created this turn) |
 | `↻N` | Cache read tokens (served from cache) |
-| `♻N%` | Cache efficiency: reads ÷ total × 100 (green ≥ 70%, yellow 40–69%, red < 40%) |
+| `N%` | Cache efficiency: reads ÷ total × 100 (green ≥ 70%, yellow 40–69%, red < 40%) |
 | Cost section | White background, black text |
 | `$ N.NN` | Cumulative session cost in USD |
 | `⧗ api╱wall` | API processing time / total wall-clock time |
