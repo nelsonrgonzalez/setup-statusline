@@ -18,9 +18,15 @@ Surface session data — context usage, model info, git state, token counts, cac
 
 ## Preview
 
-![Statusline Preview](assets/preview_linux.png)
+### Linux / macOS / WSL / Git Bash
 
-> Colors are rendered live in the terminal using ANSI escape codes. The preview above approximates the actual appearance.
+![Statusline Preview — Linux](assets/preview_linux.png)
+
+### Windows (PowerShell / CMD)
+
+![Statusline Preview — Windows](assets/preview_windows.png)
+
+> Colors are rendered live in the terminal using ANSI escape codes. The previews above approximate the actual appearance.
 
 ---
 
