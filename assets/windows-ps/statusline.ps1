@@ -43,8 +43,8 @@ function fmt_num([long]$n) {
 
 # Format milliseconds as human-readable duration
 function fmt_dur([long]$ms) {
-    $s = [int]($ms / 1000); $m = [int]($s / 60); $s = $s % 60
-    $h = [int]($m / 60);    $m = $m % 60
+    $s = [long][Math]::Floor($ms / 1000); $m = [long][Math]::Floor($s / 60); $s = $s % 60
+    $h = [long][Math]::Floor($m / 60);    $m = $m % 60
     if ($h -gt 0 -and $m -gt 0) { return "${h}h${m}m" }
     if ($h -gt 0)                { return "${h}h" }
     if ($m -gt 0 -and $s -gt 0) { return "${m}m${s}s" }
@@ -54,9 +54,9 @@ function fmt_dur([long]$ms) {
 
 # Format seconds as countdown string (e.g. ↻2h14m)
 function fmt_reset([long]$secs) {
-    $d = [int]($secs / 86400)
-    $h = [int](($secs % 86400) / 3600)
-    $m = [int](($secs % 3600) / 60)
+    $d = [long][Math]::Floor($secs / 86400)
+    $h = [long][Math]::Floor(($secs % 86400) / 3600)
+    $m = [long][Math]::Floor(($secs % 3600) / 60)
     if ($d -gt 0 -and $h -gt 0) { return "↻${d}d${h}h" }
     if ($d -gt 0)                { return "↻${d}d" }
     if ($h -gt 0)                { return "↻${h}h${m}m" }
@@ -292,7 +292,7 @@ if ($null -ne $rl5hPct -or $null -ne $rl7dPct) {
     elseif  ($rlMax -ge 70) { $rlColor = "$esc[43m$esc[1;30m" }
     else                    { $rlColor = "$esc[1;32m" }
 
-    $nowEpoch = [long]([DateTime]::UtcNow - [DateTime]::new(1970, 1, 1, 0, 0, 0, 0, 'Utc')).TotalSeconds
+    $nowEpoch = [System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 
     $rl5hPart = ""
     if ($null -ne $rl5hPct) {
