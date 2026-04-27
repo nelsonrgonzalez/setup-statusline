@@ -159,11 +159,11 @@ model_badges=""
 [ -n "$_think" ] && model_badges="${model_badges} \033[01;35m💡\033[00m"
 [ -n "$_fast"  ] && model_badges="${model_badges} \033[01;37m⚡\033[00m"
 case "$_effort" in
-  max)    model_badges="${model_badges} \033[01;37m\033[41m𐄝\033[00m" ;;
-  xhigh)  model_badges="${model_badges} \033[01;31m𐄜\033[00m" ;;
-  high)   model_badges="${model_badges} \033[01;31m𐄛\033[00m" ;;
-  medium) model_badges="${model_badges} \033[01;33m𐄚\033[00m" ;;
-  low)    model_badges="${model_badges} \033[02;37m𐄙\033[00m" ;;
+  max)    model_badges="${model_badges} \033[01;37m\033[41mmax\033[00m" ;;
+  xhigh)  model_badges="${model_badges} \033[01;31mxhigh\033[00m" ;;
+  high)   model_badges="${model_badges} \033[01;31mhigh\033[00m" ;;
+  medium) model_badges="${model_badges} \033[01;33mmedium\033[00m" ;;
+  low)    model_badges="${model_badges} \033[02;37mlow\033[00m" ;;
 esac
 case "$_vim_mode" in
   NORMAL)        model_badges="${model_badges} \033[01;32mN\033[00m" ;;

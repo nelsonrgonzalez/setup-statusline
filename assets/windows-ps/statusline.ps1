@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 # Claude Code statusline — PowerShell version (Windows native).
 # Requires PowerShell 5.1+. No external tools needed — JSON is parsed natively
 # with ConvertFrom-Json. ANSI colors require Windows Terminal or VS Code terminal.
@@ -48,15 +48,15 @@ function fmt_dur([long]$ms) {
     return "${s}s"
 }
 
-# Format seconds as countdown string (e.g. ↻2h14m)
+# Format seconds as countdown string (e.g. ⭮2h14m)
 function fmt_reset([long]$secs) {
     $d = [int]($secs / 86400)
     $h = [int](($secs % 86400) / 3600)
     $m = [int](($secs % 3600) / 60)
-    if ($d -gt 0 -and $h -gt 0) { return "↻${d}d${h}h" }
-    if ($d -gt 0)                { return "↻${d}d" }
-    if ($h -gt 0)                { return "↻${h}h${m}m" }
-    return "↻${m}m"
+    if ($d -gt 0 -and $h -gt 0) { return "⭮${d}d${h}h" }
+    if ($d -gt 0)                { return "⭮${d}d" }
+    if ($h -gt 0)                { return "⭮${h}h${m}m" }
+    return "⭮${m}m"
 }
 
 # Convert Unix epoch to local HH:MM (24-hour). Works on PS 5.1+ (.NET 4.5+).
@@ -119,8 +119,19 @@ $rl7dPct      = $data.rate_limits.seven_day.used_percentage   # may be $null
 $rl5hReset    = safe_long $data.rate_limits.five_hour.resets_at
 $rl7dReset    = safe_long $data.rate_limits.seven_day.resets_at
 $fastMode     = $data.fast_mode -eq $true
-$thinking     = $data.thinking.enabled -eq $true
+$thinking     = ($data.thinking.enabled -eq $true) -or ($data.thinking -eq $true)
 $effort       = safe_str  $data.effort.level
+
+# Fallback: read effortLevel from settings.json when not supplied in payload
+if (-not $effort) {
+    $settingsPath = "$env:USERPROFILE\.claude\settings.json"
+    if (Test-Path $settingsPath) {
+        try {
+            $s = Get-Content $settingsPath -Raw -Encoding utf8 | ConvertFrom-Json
+            if ($s.effortLevel) { $effort = $s.effortLevel }
+        } catch { }
+    }
+}
 $overflow     = $data.exceeds_200k_tokens -eq $true
 $addedDirs    = if ($null -ne $data.workspace.added_dirs) { $data.workspace.added_dirs.Count } else { 0 }
 $sessionName  = safe_str  $data.session_name
@@ -132,19 +143,12 @@ $sep  = "$esc[0m $esc[2;37m│$esc[0m "
 $tsep = " $esc[2;37m│$esc[0m"
 
 # --- Location ---
-$home = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
-$displayCwd = $cwd
-if ($cwd -eq $home) {
-    $displayCwd = "~"
-} elseif ($cwd.StartsWith($home)) {
-    $displayCwd = "~" + ($cwd.Substring($home.Length) -replace '\\', '/')
-}
-$location = "$esc[44m$esc[1;34m❯ $displayCwd$esc[0m"
-if ($sessionName) { $location += "$esc[44m$esc[1;34m [$sessionName]$esc[0m" }
-if ($addedDirs -gt 0) { $location += "$esc[44m$esc[1;34m +$addedDirs$esc[0m" }
+$location = "$esc[44m$esc[1;30m❯ $cwd$esc[0m"
+if ($sessionName) { $location += "$esc[44m$esc[1;30m [$sessionName]$esc[0m" }
+if ($addedDirs -gt 0) { $location += "$esc[44m$esc[1;30m +$addedDirs$esc[0m" }
 if ($projectDir -and $projectDir -ne $cwd) {
     $projBase = Split-Path $projectDir -Leaf
-    $location += "$esc[44m$esc[2;34m ↑$projBase$esc[0m"
+    $location += "$esc[44m$esc[2;30m ↑$projBase$esc[0m"
 }
 
 # --- Model color + badges ---
@@ -156,13 +160,12 @@ $modelColor = if     ($modelId -like "*opus*")  { "$esc[1;33m" }
 $modelBadges = ""
 if ($thinking) { $modelBadges += " $esc[1;35m💡$esc[0m" }
 if ($fastMode) { $modelBadges += " $esc[1;37m⚡$esc[0m" }
-# Effort level: Aegean numeral glyphs U+10119–U+1011D scale from low to max
 $modelBadges += switch ($effort) {
-    "max"    { " $esc[1;37m$esc[41m𐄝$esc[0m" }
-    "xhigh"  { " $esc[1;31m𐄜$esc[0m" }
-    "high"   { " $esc[1;31m𐄛$esc[0m" }
-    "medium" { " $esc[1;33m𐄚$esc[0m" }
-    "low"    { " $esc[2;37m𐄙$esc[0m" }
+    "max"    { " $esc[1;37m$esc[41mmax$esc[0m" }
+    "xhigh"  { " $esc[1;31mxhigh$esc[0m" }
+    "high"   { " $esc[1;31mhigh$esc[0m" }
+    "medium" { " $esc[1;33mmedium$esc[0m" }
+    "low"    { " $esc[2;37mlow$esc[0m" }
     default  { "" }
 }
 $modelBadges += switch ($vimMode) {
@@ -214,7 +217,7 @@ if ($cwd) {
         $staged    = @($statusLines | Where-Object { $_ -match '^[MADRCU]' }).Count
         $modified  = @($statusLines | Where-Object { $_ -match '^ [MD]' }).Count
         $untracked = @($statusLines | Where-Object { $_ -match '^\?\?' }).Count
-        $gitStr = "$esc[1;37m⎇ $branch$esc[0m"
+        $gitStr = "$esc[1;37m⎇ $(if ($branch) { $branch } else { 'HEAD' })$esc[0m"
         if ($staged    -gt 0) { $gitStr += " $esc[1;32m+$staged$esc[0m" }
         if ($modified  -gt 0) { $gitStr += " $esc[1;33m~$modified$esc[0m" }
         if ($untracked -gt 0) { $gitStr += " $esc[2;37m?$untracked$esc[0m" }
@@ -227,7 +230,7 @@ if ($hasUsage) {
     $f = fmt_num $inTokens;    if ($f) { $inStr  = "↓$f" }
     $f = fmt_num $outTokens;   if ($f) { $outStr = "↑$f" }
     $f = fmt_num $cacheCreate; if ($f) { $ccStr  = "⊕$f" }
-    $f = fmt_num $cacheRead;   if ($f) { $crStr  = "↻$f" }
+    $f = fmt_num $cacheRead;   if ($f) { $crStr  = "⭮$f" }
 }
 
 # --- Cache efficiency ---
@@ -236,7 +239,7 @@ $effStr = ""; $effColor = ""
 $totalCache = $cacheCreate + $cacheRead
 if ($totalCache -gt 0) {
     $eff = [int][Math]::Round($cacheRead * 100.0 / $totalCache)
-    $effStr = "♻$eff%"
+    $effStr = "♻ $eff%"
     if      ($eff -ge 70) { $effColor = "$esc[1;32m" }
     elseif  ($eff -ge 40) { $effColor = "$esc[43m$esc[1;33m" }
     else                  { $effColor = "$esc[41m$esc[1;31m" }
@@ -270,8 +273,8 @@ if ($apiDur -gt 0 -or $totalDur -gt 0) {
 $linesStr = ""
 if ($linesAdded -gt 0 -or $linesRemoved -gt 0) {
     $linesStr = "∆"
-    if ($linesAdded   -gt 0) { $linesStr += " $esc[32m+$linesAdded$esc[30m" }
-    if ($linesRemoved -gt 0) { $linesStr += " $esc[31m-$linesRemoved$esc[30m" }
+    if ($linesAdded   -gt 0) { $linesStr += " $esc[32m+$linesAdded$esc[38;2;0;0;0m" }
+    if ($linesRemoved -gt 0) { $linesStr += " $esc[31m-$linesRemoved$esc[38;2;0;0;0m" }
 }
 
 # --- Rate limits ---
@@ -306,9 +309,8 @@ if ($null -ne $rl5hPct -or $null -ne $rl7dPct) {
             if ($in7d -gt 0) { $rl7dPart += " [$(fmt_reset $in7d)]" }
         }
     }
-    $parts = $rl5hPart
-    if ($rl7dPart) { $parts += " $rl7dPart" }
-    $rlStr = "◷ $parts"
+    $parts = @($rl5hPart, $rl7dPart) | Where-Object { $_ }
+    $rlStr = "◷ $($parts -join ' ')"
 }
 
 # --- Assemble three output lines ---
@@ -320,19 +322,24 @@ if ($modelLabel) { $line1 += $sep + $modelColor + $modelLabel + $modelBadges + "
 
 $line2 = ""
 if ($winStr) { $line2  = "$winBg$winStr$esc[0m" }
-if ($rlStr)  { $line2 += (if ($line2) { $sep } else { "" }) + $rlColor + $rlStr + "$esc[0m" }
+if ($rlStr) {
+    if ($line2) { $line2 += $sep }
+    $line2 += $rlColor + $rlStr + "$esc[0m"
+}
 if ($line2)  { $line2 += $tsep }
 
 $line3 = ""
 $tokenArr = @($inStr, $outStr, $tinStr, $toutStr) | Where-Object { $_ }
 $tokenParts = $tokenArr -join " "
 if ($tokenParts) {
-    $line3 += (if ($line3) { $sep } else { "" }) + "$esc[45m$esc[1;35m⬡ $tokenParts$esc[0m"
+    if ($line3) { $line3 += $sep }
+    $line3 += "$esc[45m$esc[1;30m⬡ $tokenParts$esc[0m"
 }
 $cacheArr = @($ccStr, $crStr) | Where-Object { $_ }
 $cacheParts = $cacheArr -join " "
 if ($cacheParts) {
-    $line3 += (if ($line3) { $sep } else { "" }) + "$esc[100m$esc[1;37m⚡ $cacheParts$esc[0m"
+    if ($line3) { $line3 += $sep }
+    $line3 += "$esc[100m$esc[1;37m⚡ $cacheParts$esc[0m"
     if ($effStr) { $line3 += " $effColor$effStr$esc[0m" }
 }
 $costArr = @()
@@ -341,7 +348,8 @@ if ($durStr)   { $costArr += $durStr }
 if ($linesStr) { $costArr += $linesStr }
 $costParts = $costArr -join " "
 if ($costParts) {
-    $line3 += (if ($line3) { $sep } else { "" }) + "$esc[107m$esc[30m$costParts$esc[0m$tsep"
+    if ($line3) { $line3 += $sep }
+    $line3 += "$esc[107m$esc[1m$esc[38;2;0;0;0m$costParts$esc[0m$tsep"
 }
 
 $output = $line1

@@ -189,7 +189,7 @@ Three lines of ANSI-colored output rendered in the Claude Code terminal on every
 **Line 1 — Location · Git · Model** (blue / white / cyan)
 - `❯ ~/path [session-name]` — working directory with `~` substitution; named session in brackets if set
 - `⎇ branch +N ~N ?N` — git branch with staged (green), modified (yellow), untracked (dim) counts; `⎇ —` if not a git repo
-- `Model 💡 ⚡ 𐄙–𐄝` — model name color-coded by family (gold=Opus, green=Haiku, cyan=Sonnet); badges for thinking (💡), fast mode (⚡), effort level (Aegean glyphs low→max), vim mode (N/I/V/VL)
+- `Model 💡 ⚡ low–max` — model name color-coded by family (gold=Opus, green=Haiku, cyan=Sonnet); badges for thinking (💡), fast mode (⚡), effort level text (low/medium/high/xhigh/max), vim mode (N/I/V/VL)
 
 **Line 2 — Context Bar · Rate Limits** (threshold-colored)
 - `⛀/⛁/⚠ ██▊███ Nk╱Nk (N%)` — 10-block smooth progress bar; icon and fill color scale with usage: ⛀ green <65%, ⛁ yellow 65–74%, ⛁ red 75–79%, ⚠ bright-red-background ≥80% (autocompact threshold)

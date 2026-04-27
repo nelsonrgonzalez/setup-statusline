@@ -269,7 +269,7 @@ All visual elements — icons, colors, thresholds, and layout — are defined wi
 |---------|----------------|
 | Context thresholds | Percentage breakpoints and colors near `# Context bar` |
 | Model colors | `case "$model_raw"` (bash) / `switch ($modelId)` (PS) |
-| Effort icons | `case "$_effort"` (bash) / `switch ($effort)` (PS) |
+| Effort labels | `case "$_effort"` (bash) / `switch ($effort)` (PS) |
 | Rate limit thresholds | Warning/critical percentages near `# Rate limits` |
 | Cache efficiency bands | Green/yellow/red breakpoints near `# Cache efficiency` |
 
