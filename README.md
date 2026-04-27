@@ -182,7 +182,7 @@ Copy-Item "assets\windows-ps\statusline.ps1" "$env:USERPROFILE\.claude\statuslin
 {
   "statusLine": {
     "type": "command",
-    "command": "pwsh -NoProfile -NonInteractive -File \"%USERPROFILE%\\.claude\\statusline.ps1\"",
+    "command": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.claude\\statusline.ps1\"",
     "refreshInterval": 10
   }
 }
